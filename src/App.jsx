@@ -1,11 +1,67 @@
-import React from "react";
-import "./app.css";
+import React, { useState } from "react";
+import { Routes, Route, Navigate, useNavigate, Link } from "react-router-dom";
+import "./App.css";
+import Workfinder from "./pages/Workfinder.jsx";
 
-export default function App() {
-  console.log("Tester om det funker");
+function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const nav = useNavigate();
+
+  function confirmLogin(btn) {
+    btn.preventDefault();
+    if (email === "test@test.com" && password === "1234") {
+      setMessage("Du er logget inn");
+      nav("/workfinder", { replace: true });
+    } else {
+      setMessage("Feil brukernavn eller passord");
+    }
+  }
+
   return (
     <main>
-      <h1>Work finder</h1>
+
+      <section>
+
+        <header>
+          <h1 className="title">Workfinder</h1>
+          <h2 className="subtitle">Logg inn</h2>
+        </header>
+
+        <form onSubmit={confirmLogin}>
+          <label>
+            <span>E-post</span>
+            <input type="email" value={email} onChange={(btn)=>setEmail(btn.target.value)} required />
+          </label>
+
+          <label>
+            <span>Passord</span>
+            <input type="password" value={password} onChange={(btn)=>setPassword(btn.target.value)} required />
+          </label>
+          <button type="submit">Logg inn</button>
+        </form>
+
+        {message && <p className="status">{message}</p>}
+
+      </section>
+
     </main>
   );
+}
+
+export default function App() {
+  console.log("Hei!");
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/workfinder" element={<Workfinder />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </>
+  );
+
 }

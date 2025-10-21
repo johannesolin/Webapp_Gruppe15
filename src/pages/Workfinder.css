@@ -1,0 +1,90 @@
+#workfinder {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #90b4f0 0%, #f2a7a7 100%);
+  font-family: Arial, sans-serif;
+  color: #222;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+#workfinder > section {
+  display: flex;
+  flex: 1;
+  max-width: 1100px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+#workfinder > section > header {
+  flex: 1 1 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+#workfinder h1 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  color: #004aad;
+}
+
+#workfinder header p {
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+#workfinder > section > section {
+  flex: 1 1 60%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+#workfinder h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  color: #111;
+}
+
+#workfinder article {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+}
+
+#workfinder article h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+#workfinder article p {
+  font-size: 16px;
+  margin: 4px 0 10px;
+  flex: 1;
+}
+
+#workfinder article footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#workfinder button {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background: #000000;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
