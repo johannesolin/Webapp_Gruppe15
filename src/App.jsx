@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Routes, Route, Navigate, useNavigate, Link } from "react-router-dom";
 import "./App.css";
 import Workfinder from "./pages/Workfinder.jsx";
+import Stilling from "./pages/Stilling.jsx";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -44,6 +45,10 @@ function LoginPage() {
 
         {message && <p className="status">{message}</p>}
 
+        <footer className="registrer-knapp">
+          <button type="button" className="registrer-btn" onClick={() => nav("/stilling")}>Registrer her!</button>
+        </footer>
+
       </section>
 
     </main>
@@ -58,6 +63,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/stilling" element={<Stilling />} />
         <Route path="/workfinder" element={<Workfinder />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
