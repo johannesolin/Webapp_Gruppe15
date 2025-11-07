@@ -1,38 +1,40 @@
-main {
+.agiver {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
   background-color: #f5f7fb;
   font-family: system-ui, sans-serif;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
-article {
+.agiver article {
   background-color: #fff;
   padding: 2rem;
   border-radius: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
 }
 
-header h1 {
-  font-size: 1.4rem;
+.agiver header h1 {
+  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
-section {
+.agiver section {
   margin-bottom: 1.5rem;
 }
 
-h2 {
-  font-size: 1.1rem;
+.agiver h2 {
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
 
-label {
+.agiver label {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -41,39 +43,49 @@ label {
   color: #333;
 }
 
-input {
-  padding: 0.75rem 1rem;
+.agiver input {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
   border: 1px solid #d1d5db;
-  border-radius: 1rem;
+  border-radius: 0.8rem;
   font-size: 0.9rem;
+  box-sizing: border-box;
 }
 
-textarea {
-  padding: 0.75rem 1rem;
+.agiver textarea {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
   border: 1px solid #d1d5db;
-  border-radius: 1rem;
+  border-radius: 0.8rem;
   font-size: 0.9rem;
   resize: none;
   min-height: 80px;
+  box-sizing: border-box;
 }
 
-.choices {
-  margin-top: 0.5rem;
+.agiver .choices {
+  margin-top: 1.5rem;
 }
 
-.choices ul {
+.agiver .choices ul {
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0.5rem 0;
 }
 
-.choices input[type="checkbox"] {
+.agiver .choices li {
+  margin: 0;
+  padding: 0;
+}
+
+.agiver .choices input[type="checkbox"] {
   display: none;
 }
 
-.choices label {
+.agiver .choices label {
   cursor: pointer;
   background-color: #f3f4f6;
   border: 1px solid #d1d5db;
@@ -82,36 +94,39 @@ textarea {
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   user-select: none;
   margin-bottom: 0;
+  font-size: 0.9rem;
+  color: #333;
 }
 
-.choices label:hover {
+.agiver .choices label:hover {
   background-color: #e5e7eb;
 }
 
-.choices label:has(input[type="checkbox"]:checked) {
+.agiver .choices label:has(input[type="checkbox"]:checked) {
   background-color: #2563eb;
   border-color: #2563eb;
   color: #fff;
   font-weight: 600;
 }
 
-footer {
+.agiver footer {
   margin-top: 1rem;
 }
 
-footer button {
+.agiver footer button {
   width: 100%;
   padding: 0.9rem;
   border: none;
-  border-radius: 2rem;
+  border-radius: 1.2rem;
   background-color: #2563eb;
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  box-sizing: border-box;
 }
 
-footer button:hover {
+.agiver footer button:hover {
   background-color: #1e40af;
 }

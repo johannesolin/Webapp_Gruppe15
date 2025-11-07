@@ -14,16 +14,14 @@ export default function Agiver() {
   const [workType, setWorkType] = useState([]);
 
   function handleCheckbox(type) {
-    const updatedWorkType = [...workType];
-
-    if (updatedWorkType.includes(type)) {
-      const index = updatedWorkType.indexOf(type);
-      updatedWorkType.splice(index, 1);
+    const updated = [...workType];
+    if (updated.includes(type)) {
+      const index = updated.indexOf(type);
+      updated.splice(index, 1);
     } else {
-      updatedWorkType.push(type);
+      updated.push(type);
     }
-
-    setWorkType(updatedWorkType);
+    setWorkType(updated);
   }
 
   function handleSubmit(e) {
@@ -49,7 +47,7 @@ export default function Agiver() {
   }
 
   return (
-    <main>
+    <main className="agiver">
       <article>
         <header>
           <h1>🏢 Bedriftsregistrering</h1>

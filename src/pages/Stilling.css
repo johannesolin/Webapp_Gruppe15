@@ -1,13 +1,15 @@
-/* Minimal flex-layout, lite padding */
-
-#stilling {
-  min-height: 100vh;
+.stilling {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, #90b4f0 0%, #f2a7a7 100%);
   font-family: Arial, sans-serif;
   color: #222;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .stilling-container {
@@ -17,10 +19,11 @@
   justify-content: center;
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 24px 32px;
+  border-radius: 10px;
+  padding: 32px 36px;
   width: 360px;
   gap: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .stilling-container h1 {
@@ -34,21 +37,30 @@
   margin: 0;
   text-align: center;
   font-size: 16px;
+  color: #333;
 }
 
 #stilling-buttons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
 }
 
 #stilling-buttons button {
   flex: 1;
   padding: 10px 0;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 6px;
   background: #000000;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 15px;
+  transition: background 0.25s ease, transform 0.1s ease;
+}
+
+#stilling-buttons button:hover {
+  background: #060707;
+  transform: scale(1.02);
 }

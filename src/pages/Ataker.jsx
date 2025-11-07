@@ -40,7 +40,7 @@ export default function Ataker() {
   }
 
   return (
-    <main>
+    <main className="ataker">
       <article>
         <header>
           <h1>👤 Registrering for arbeidssøkere</h1>

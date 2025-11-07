@@ -6,7 +6,7 @@ export default function Stilling() {
   const nav = useNavigate();
 
   return (
-    <main id="stilling">
+    <main className="stilling">
       <section className="stilling-container">
         <header>
           <h1>Hvem er du?</h1>
