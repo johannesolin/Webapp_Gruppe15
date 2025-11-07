@@ -3,6 +3,9 @@ import { Routes, Route, Navigate, useNavigate, Link } from "react-router-dom";
 import "./App.css";
 import Workfinder from "./pages/Workfinder.jsx";
 import Stilling from "./pages/Stilling.jsx";
+import Agiver from "./pages/Agiver.jsx";
+import Ataker from "./pages/Ataker.jsx";
+
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -64,6 +67,8 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/stilling" element={<Stilling />} />
+        <Route path="/agiver" element={<Agiver />} />
+        <Route path="/ataker" element={<Ataker />} />        
         <Route path="/workfinder" element={<Workfinder />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
