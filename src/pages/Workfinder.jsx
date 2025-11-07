@@ -1,51 +1,61 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Workfinder.css";
 
 export default function Workfinder() {
+  const nav = useNavigate();
+
   return (
+    <main className="workfinder">
+      <header className="topbar">
+        <h1><span>Workfinder</span></h1>
+        <nav>
+          <button className="profile-btn">👤 Min profil</button>
+          <button className="logout" onClick={() => nav("/login")}>
+            Logg ut
+          </button>
+        </nav>
+      </header>
 
-    <main id="workfinder">
-      <section>
-        <header>
-          <h1>Workfinder</h1>
-          <p>Du er logget inn. Finn enkle jobb her.</p>
-        </header>
+      <section className="main-content">
+        <aside className="sidebar">
+          <nav className="tabs">
+            <button className="active">Treff</button>
+            <button>Meldinger</button>
+          </nav>
 
-        <section>
-          <h2>Anbefalte stillinger</h2>
+          <section>
+            <h2>Dine treff</h2>
+            <ul>
+              <li className="match-item">
+                <strong>Bruker A</strong>, 26
+                <p>UX-designer</p>
+              </li>
+              <li className="match-item">
+                <strong>Bruker B</strong>, 31
+                <p>Frontend-utvikler</p>
+              </li>
+              <li className="match-item">
+                <strong>Bruker C</strong>, 29
+                <p>Prosjektleder</p>
+              </li>
+            </ul>
+          </section>
+        </aside>
 
-          <article>
+        <article className="profile-view">
+          <section>
             <header>
-              <h3>Frontend-utvikler</h3>
+              <h2>Bruker A, 26</h2>
+              <p>UX-designer</p>
             </header>
-            <p>React · Oslo · Heltid</p>
-            <footer>
-              <button>Les mer</button>
+
+            <footer className="actions">
+              <button title="Ikke interessert">❌</button>
+              <button title="Interessert">✅</button>
             </footer>
-          </article>
-
-          <article>
-            <header>
-              <h3>Butikkmedarbeider</h3>
-            </header>
-            <p>Kundebehandling · Fredrikstad · Deltid</p>
-            <footer>
-              <button>Les mer</button>
-            </footer>
-          </article>
-
-          <article>
-            <header>
-              <h3>Vekter</h3>
-            </header>
-            <p>Sikkerhet · Råde · Deltid</p>
-            <footer>
-              <button>Les mer</button>
-            </footer>
-          </article>
-
-        </section>
-
+          </section>
+        </article>
       </section>
     </main>
   );

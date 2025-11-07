@@ -1,90 +1,147 @@
-#workfinder {
+.workfinder {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(180deg, #90b4f0 0%, #f2a7a7 100%);
-  font-family: Arial, sans-serif;
-  color: #222;
-  padding: 20px;
+  background-color: #f9fafb;
+  font-family: system-ui, sans-serif;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.topbar h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.topbar h1 span {
+  color: #e11d48;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.topbar button {
+  border: none;
+  background: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border-radius: 1rem;
+  transition: background-color 0.2s;
+}
+
+.topbar button:hover {
+  background-color: #f3f4f6;
+}
+
+.logout {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.logout:hover {
+  background-color: #fecaca;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.sidebar {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 250px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabs button.active {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.sidebar section h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.match-item {
+  margin-bottom: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.profile-view {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-#workfinder > section {
+.profile-view header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.profile-view header p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.actions {
   display: flex;
-  flex: 1;
-  max-width: 1100px;
-  gap: 24px;
-  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
-#workfinder > section > header {
-  flex: 1 1 40%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-#workfinder h1 {
-  margin: 0 0 10px;
-  font-size: 26px;
-  color: #004aad;
-}
-
-#workfinder header p {
-  font-size: 17px;
-  line-height: 1.4;
-}
-
-#workfinder > section > section {
-  flex: 1 1 60%;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-#workfinder h2 {
-  margin: 0 0 14px;
-  font-size: 20px;
-  color: #111;
-}
-
-#workfinder article {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  margin-bottom: 16px;
-  padding: 10px 14px;
-}
-
-#workfinder article h3 {
-  margin: 0 0 6px;
-  font-size: 18px;
-}
-
-#workfinder article p {
-  font-size: 16px;
-  margin: 4px 0 10px;
-  flex: 1;
-}
-
-#workfinder article footer {
-  display: flex;
-  justify-content: flex-end;
-}
-
-#workfinder button {
-  padding: 8px 14px;
-  border: 1px solid #ccc;
-  background: #000000;
-  border-radius: 5px;
-  font-size: 15px;
+.actions button {
+  font-size: 1.5rem;
+  border: none;
+  background: none;
   cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.actions button:hover {
+  transform: scale(1.1);
 }
