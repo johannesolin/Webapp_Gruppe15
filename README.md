@@ -3,19 +3,33 @@ ITF31619-1 25H
 
 Dette er vårt repo for Webapplikasjoner innleveringer Alpha og Final Beta.
 
-For å kjøre prosjektet må man installere Node Modules (Npm) og deretter kjører man Run Dev.
+---
 
-Så step by step i terminal:
+Kom i gang:
 
-Npm Install 
-Npm run dev
+1. Installer avhengigheter:
+npm install
 
-Når frontend kjører-> åpne lenken fra terminal / localhost etc
+2. Start frontend:
+npm run dev
+Frontend kjører typisk på: http://localhost:5173
 
-Forside / Login for testing bruk mail og passord:
+3. Start backend Worker (lokalt, for database):
+cd backend
+npx wrangler dev
+Worker kjører typisk på: http://127.0.0.1:8787
 
-mail: test@test.com
-passord: 1234
+---
 
-Vi har ikke knyttet frontend opp mot en database enda (Dette blir gjort før Beta).
-(Les hvorfor i rapporten vedlagt innlevering)
+Test database (Cloudflare D1):
+
+- Åpne /database i frontend, f.eks. http://localhost:5173/database
+- Skriv tekst i inputfeltet og trykk "Legg til" for å legge inn i Test-tabellen
+- Alle rader vises under inputfeltet
+
+---
+
+Testbruker (Login-side):
+
+- E-post: test@test.com
+- Passord: 1234
