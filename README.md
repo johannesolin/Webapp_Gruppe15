@@ -8,16 +8,16 @@ Dette er vårt repo for Webapplikasjoner innleveringer Alpha og Final Beta.
 Kom i gang:
 
 1. Installer avhengigheter:
-npm install
+	npm install
 
 2. Start frontend:
-npm run dev
-Frontend kjører typisk på: http://localhost:5173
+	npm run dev
+	Frontend kjører typisk på: http://localhost:5173
 
 3. Start backend Worker (lokalt, for database):
-cd backend
-npx wrangler dev
-Worker kjører typisk på: http://127.0.0.1:8787
+	cd backend
+	npx wrangler dev
+	Worker kjører typisk på: http://127.0.0.1:8787
 
 ---
 
