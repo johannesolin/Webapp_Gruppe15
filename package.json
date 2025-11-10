@@ -39,6 +39,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.4",
     "patch-package": "^8.0.1",
-    "vite": "^7.1.11"
+    "vite": "^7.1.11",
+    "wrangler": "^4.46.0"
   }
 }
