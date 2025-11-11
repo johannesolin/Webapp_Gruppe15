@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { login } from "../lib/api";
 
 export default function Login() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const nav = useNavigate();
 
-  function confirmLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (email === "test@test.com" && password === "1234") {
-      setMessage("Du er logget inn");
-      nav("/workfinder", { replace: true });
-    } else {
-      setMessage("Feil brukernavn eller passord");
-    }
+  async function confirmLogin(e) {
+  e.preventDefault();
+  setMessage("");
+  try {
+    const data = await login(email, password);
+    localStorage.setItem("workf_bruker", JSON.stringify(data.user));
+    setMessage("Du er logget inn!");
+    nav("/workfinder", { replace: true });
+  } catch (err) {
+    setMessage(err.message || "Feil brukernavn eller passord");
   }
+}
 
   return (
     <main className="login">
@@ -32,9 +36,7 @@ export default function Login() {
             <input
               type="email"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </label>
@@ -44,9 +46,7 @@ export default function Login() {
             <input
               type="password"
               value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </label>
@@ -57,11 +57,7 @@ export default function Login() {
         {message && <p className="status">{message}</p>}
 
         <footer className="registrer-knapp">
-          <button
-            type="button"
-            className="registrer-btn"
-            onClick={() => nav("/stilling")}
-          >
+          <button type="button" className="registrer-btn" onClick={() => nav("/stilling")}>
             Registrer her!
           </button>
         </footer>
