@@ -8,7 +8,17 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8787', // backend Worker
         changeOrigin: true
+      },
+      '/rw': {
+        target: 'http://localhost:8787', // Redwood routes
+        changeOrigin: true
       }
+    }
+  },
+  resolve: {
+    alias: {
+      'rwsdk': 'rwsdk'
     }
   }
 });
+

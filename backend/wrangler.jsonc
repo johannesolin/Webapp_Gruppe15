@@ -17,7 +17,19 @@
 			"database_id": "b1d86fe6-3331-4c6b-bd2e-954de05d78d1",
 			"remote": true
 		}
-	]
+	],
+	"env": {
+		"production": {
+			"vars": {
+				"RWSDK_ENV": "production"
+			}
+		},
+		"development": {
+			"vars": {
+				"RWSDK_ENV": "development"
+			}
+		}
+	}
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
