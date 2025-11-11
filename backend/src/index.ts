@@ -82,7 +82,7 @@ export default {
 				)
 				.run();
 
-				return Response.json(results);
+				return json(results);
 			} else if (request.method === "POST") {
 				const input_text = await request.text();
 
@@ -91,7 +91,7 @@ export default {
 				.bind(input_text)
 				.run();
 
-				return new Response(`${input_text} lagt til Test (HelloWorld)`);
+				return json({ message: `${input_text} lagt til Test (HelloWorld)` }, 201);
 			}
 		}
 
@@ -102,10 +102,10 @@ export default {
 				)
 				.all();
 
-				return Response.json(results);
+				return json(results);
 			} catch (err) {
 				console.error(err);
-				return new Response("Feil ved henting av brukere", { status: 500 });
+				return json({ error: "Feil ved henting av brukere" }, 500);
 			}
 		}
 
