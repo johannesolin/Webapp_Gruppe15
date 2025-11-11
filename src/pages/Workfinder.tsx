@@ -8,7 +8,9 @@ export default function Workfinder() {
   return (
     <main className="workfinder">
       <header className="topbar">
-        <h1><span>Workfinder</span></h1>
+        <h1>
+          <span>Workfinder</span>
+        </h1>
         <nav>
           <button className="profile-btn">👤 Min profil</button>
           <button className="logout" onClick={() => nav("/login")}>

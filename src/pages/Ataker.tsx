@@ -5,17 +5,17 @@ import "./Ataker.css";
 export default function Ataker() {
   const nav = useNavigate();
 
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [about, setAbout] = useState("");
-  const [skills, setSkills] = useState("");
-  const [location, setLocation] = useState("");
-  const [cv, setCv] = useState(null);
+  const [name, setName] = useState<string>("");
+  const [age, setAge] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [about, setAbout] = useState<string>("");
+  const [skills, setSkills] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [cv, setCv] = useState<File | null>(null);
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -56,7 +56,9 @@ export default function Ataker() {
                 type="text"
                 placeholder="Fullt navn"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
                 required
               />
             </label>
@@ -67,7 +69,9 @@ export default function Ataker() {
                 type="number"
                 placeholder="Alder"
                 value={age}
-                onChange={(e) => setAge(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setAge(e.target.value)
+                }
               />
             </label>
 
@@ -77,7 +81,9 @@ export default function Ataker() {
                 type="email"
                 placeholder="E-post"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
                 required
               />
             </label>
@@ -88,7 +94,9 @@ export default function Ataker() {
                 type="password"
                 placeholder="Passord"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
                 required
               />
             </label>
@@ -99,7 +107,9 @@ export default function Ataker() {
                 type="password"
                 placeholder="Gjenta passord"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setConfirmPassword(e.target.value)
+                }
                 required
               />
             </label>
@@ -109,7 +119,9 @@ export default function Ataker() {
               <textarea
                 placeholder="Fortell kort om deg selv..."
                 value={about}
-                onChange={(e) => setAbout(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setAbout(e.target.value)
+                }
               />
             </label>
 
@@ -119,7 +131,9 @@ export default function Ataker() {
                 type="text"
                 placeholder="Ferdigheter (f.eks. UI, React)"
                 value={skills}
-                onChange={(e) => setSkills(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSkills(e.target.value)
+                }
               />
             </label>
 
@@ -129,7 +143,9 @@ export default function Ataker() {
                 type="text"
                 placeholder="Lokasjon (f.eks. Oslo)"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setLocation(e.target.value)
+                }
               />
             </label>
 
@@ -138,7 +154,10 @@ export default function Ataker() {
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
-                onChange={(e) => setCv(e.target.files[0])}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0] ?? null;
+                  setCv(file);
+                }}
               />
             </label>
           </section>
