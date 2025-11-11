@@ -15,7 +15,9 @@ export default function Stilling() {
 
         <nav id="stilling-buttons">
           <button onClick={() => nav("/ataker")}>Jeg søker jobb</button>
-          <button onClick={() => nav("/agiver")}>Jeg representerer en bedrift</button>
+          <button onClick={() => nav("/agiver")}>
+            Jeg representerer en bedrift
+          </button>
         </nav>
       </section>
     </main>

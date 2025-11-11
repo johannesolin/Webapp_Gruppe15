@@ -5,26 +5,24 @@ import "./Agiver.css";
 export default function Agiver() {
   const nav = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [description, setDescription] = useState("");
-  const [competence, setCompetence] = useState("");
-  const [location, setLocation] = useState("");
-  const [workType, setWorkType] = useState([]);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [competence, setCompetence] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [workType, setWorkType] = useState<string[]>([]);
 
-  function handleCheckbox(type) {
-    const updated = [...workType];
-    if (updated.includes(type)) {
-      const index = updated.indexOf(type);
-      updated.splice(index, 1);
-    } else {
-      updated.push(type);
-    }
-    setWorkType(updated);
+  function handleCheckbox(type: string) {
+    setWorkType((prev) => {
+      if (prev.includes(type)) {
+        return prev.filter((t) => t !== type);
+      }
+      return [...prev, type];
+    });
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -63,7 +61,9 @@ export default function Agiver() {
                 type="email"
                 placeholder="Bedriftens e-post"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
                 required
               />
             </label>
@@ -74,7 +74,9 @@ export default function Agiver() {
                 type="password"
                 placeholder="Passord"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
                 required
               />
             </label>
@@ -85,7 +87,9 @@ export default function Agiver() {
                 type="password"
                 placeholder="Gjenta passord"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setConfirmPassword(e.target.value)
+                }
                 required
               />
             </label>
@@ -95,7 +99,9 @@ export default function Agiver() {
               <textarea
                 placeholder="Fortell kort om bedriften..."
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setDescription(e.target.value)
+                }
               />
             </label>
 
@@ -104,7 +110,9 @@ export default function Agiver() {
               <input
                 placeholder="Kjernekompetanse / fagområder"
                 value={competence}
-                onChange={(e) => setCompetence(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCompetence(e.target.value)
+                }
               />
             </label>
 
@@ -113,7 +121,9 @@ export default function Agiver() {
               <input
                 placeholder="Lokasjon (f.eks. Oslo)"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setLocation(e.target.value)
+                }
               />
             </label>
           </section>
