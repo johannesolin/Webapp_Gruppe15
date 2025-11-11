@@ -1,43 +1,48 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerAtaker } from "../lib/api";
 import "./Ataker.css";
 
 export default function Ataker() {
   const nav = useNavigate();
 
-  const [name, setName] = useState<string>("");
-  const [age, setAge] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [about, setAbout] = useState<string>("");
-  const [skills, setSkills] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [cv, setCv] = useState<File | null>(null);
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [about, setAbout] = useState("");
+  const [skills, setSkills] = useState("");
+  const [location, setLocation] = useState("");
+  const [cv, setCv] = useState(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(e) {
+  e.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert("Passordene stemmer ikke!");
-      return;
-    }
-
-    const applicantData = {
-      name,
-      age,
-      email,
-      password,
-      about,
-      skills,
-      location,
-      cv,
-    };
-
-    console.log("✅ Registrert arbeidssøker:", applicantData);
-    alert("Arbeidssøker registrert!");
-    nav("/login");
+  if (password !== confirmPassword) {
+    alert("Passordene stemmer ikke!");
+    return;
   }
+
+  const applicantData = {
+    name,
+    age,
+    email,
+    password,
+    about,
+    skills,
+    location,
+    cv: cv ? { name: cv.name } : null
+  };
+
+  try {
+    await registerAtaker(applicantData);
+    alert("Du er registrert som arbeidstaker!");
+    nav("/login");
+  } catch (errorMessage) {
+    alert(errorMessage.message || "Registrering feilet");
+  }
+}
 
   return (
     <main className="ataker">
@@ -48,17 +53,13 @@ export default function Ataker() {
 
         <form onSubmit={handleSubmit}>
           <section>
-            <h2>Personlig informasjon</h2>
-
             <label>
               Fullt navn
               <input
                 type="text"
                 placeholder="Fullt navn"
                 value={name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
-                }
+                onChange={(vrd) => setName(vrd.target.value)}
                 required
               />
             </label>
@@ -69,9 +70,7 @@ export default function Ataker() {
                 type="number"
                 placeholder="Alder"
                 value={age}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setAge(e.target.value)
-                }
+                onChange={(vrd) => setAge(vrd.target.value)}
               />
             </label>
 
@@ -81,9 +80,7 @@ export default function Ataker() {
                 type="email"
                 placeholder="E-post"
                 value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(vrd) => setEmail(vrd.target.value)}
                 required
               />
             </label>
@@ -94,9 +91,7 @@ export default function Ataker() {
                 type="password"
                 placeholder="Passord"
                 value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(vrd) => setPassword(vrd.target.value)}
                 required
               />
             </label>
@@ -107,9 +102,7 @@ export default function Ataker() {
                 type="password"
                 placeholder="Gjenta passord"
                 value={confirmPassword}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setConfirmPassword(e.target.value)
-                }
+                onChange={(vrd) => setConfirmPassword(vrd.target.value)}
                 required
               />
             </label>
@@ -119,9 +112,7 @@ export default function Ataker() {
               <textarea
                 placeholder="Fortell kort om deg selv..."
                 value={about}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setAbout(e.target.value)
-                }
+                onChange={(vrd) => setAbout(vrd.target.value)}
               />
             </label>
 
@@ -131,9 +122,7 @@ export default function Ataker() {
                 type="text"
                 placeholder="Ferdigheter (f.eks. UI, React)"
                 value={skills}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setSkills(e.target.value)
-                }
+                onChange={(vrd) => setSkills(vrd.target.value)}
               />
             </label>
 
@@ -143,9 +132,7 @@ export default function Ataker() {
                 type="text"
                 placeholder="Lokasjon (f.eks. Oslo)"
                 value={location}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setLocation(e.target.value)
-                }
+                onChange={(vrd) => setLocation(vrd.target.value)}
               />
             </label>
 
@@ -154,10 +141,7 @@ export default function Ataker() {
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const file = e.target.files?.[0] ?? null;
-                  setCv(file);
-                }}
+                onChange={(vrd) => setCv(vrd.target.files[0])}
               />
             </label>
           </section>
