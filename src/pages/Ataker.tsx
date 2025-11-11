@@ -48,8 +48,6 @@ export default function Ataker() {
 
         <form onSubmit={handleSubmit}>
           <section>
-            <h2>Personlig informasjon</h2>
-
             <label>
               Fullt navn
               <input
