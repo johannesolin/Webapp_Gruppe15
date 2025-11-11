@@ -1,36 +1,43 @@
 .agiver {
+  width: 100vw;
+  height: 100vh;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  background-color: #f5f7fb;
+  background: linear-gradient(180deg, #90b4f0 0%, #f2a7a7 100%);
   font-family: system-ui, sans-serif;
-  padding: 2rem 1rem;
-  box-sizing: border-box;
+  color: #222;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  padding: 2rem 0;
 }
 
 .agiver article {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 32px 36px;
   width: 100%;
   max-width: 480px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 2rem 0;
 }
 
 .agiver header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.agiver section {
-  margin-bottom: 1.5rem;
+  margin: 0;
+  font-size: 24px;
+  color: #004aad;
+  text-align: center;
 }
 
 .agiver h2 {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 16px;
+  color: #333;
   margin-bottom: 0.75rem;
 }
 
@@ -76,11 +83,6 @@
   margin: 0.5rem 0;
 }
 
-.agiver .choices li {
-  margin: 0;
-  padding: 0;
-}
-
 .agiver .choices input[type="checkbox"] {
   display: none;
 }
@@ -93,7 +95,6 @@
   padding: 0.45rem 1rem;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   user-select: none;
-  margin-bottom: 0;
   font-size: 0.9rem;
   color: #333;
 }
@@ -115,18 +116,18 @@
 
 .agiver footer button {
   width: 100%;
-  padding: 0.9rem;
+  padding: 10px 0;
   border: none;
-  border-radius: 1.2rem;
-  background-color: #2563eb;
-  color: #fff;
-  font-size: 1rem;
+  border-radius: 6px;
+  background: #000;
+  color: white;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
-  box-sizing: border-box;
+  transition: background 0.25s ease, transform 0.1s ease;
 }
 
 .agiver footer button:hover {
-  background-color: #1e40af;
+  background: #060707;
+  transform: scale(1.02);
 }
