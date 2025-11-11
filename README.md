@@ -16,15 +16,4 @@ npm i
 npm run dev
 ---
 
-Test database (Cloudflare D1):
 
-- Åpne /database i frontend, f.eks. http://localhost:5173/database
-- Skriv tekst i inputfeltet og trykk "Legg til" for å legge inn i Test-tabellen
-- Alle rader vises under inputfeltet
-
----
-
-Testbruker (Login-side):
-
-- E-post: test@test.com
-- Passord: 1234
