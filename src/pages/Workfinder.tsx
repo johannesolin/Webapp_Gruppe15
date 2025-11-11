@@ -2,9 +2,49 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Workfinder.css";
 
+type Tab = "treff" | "meldinger";
+
+const matches = {
+  "Bruker A": {
+    age: 26,
+    title: "UX-designer",
+    about: "Elsker prototyper og brukertesting.",
+  },
+  "Bruker B": {
+    age: 31,
+    title: "Frontend-utvikler",
+    about: "React/Vite, design systems, ytelse.",
+  },
+  "Bruker C": {
+    age: 29,
+    title: "Prosjektleder",
+    about: "Scrum, roadmaps og leveranser.",
+  },
+} as const;
+
+type MatchUser = keyof typeof matches;
+
+const messages = {
+  "Bruker A": [
+    { from: "them", text: "Hei! Hvordan går det?" },
+    { from: "me", text: "Hei! Alt bra 😄" },
+    { from: "them", text: "Så bra! Jobber du fortsatt på prosjektet?" },
+  ],
+  "Bruker B": [
+    { from: "them", text: "Hei! Skal vi ta en kaffe snart?" },
+    { from: "me", text: "Gjerne! Når passer det?" },
+    { from: "them", text: "Hva med fredag ettermiddag?" },
+  ],
+} as const;
+
+type MessageUser = keyof typeof messages;
+
 export default function Workfinder() {
   const nav = useNavigate();
-  const [activeTab, setActiveTab] = useState<"treff" | "meldinger">("treff");
+
+  const [activeTab, setActiveTab] = useState<Tab>("treff");
+  const [selectedMatch, setSelectedMatch] = useState<MatchUser>("Bruker A");
+  const [selectedUser, setSelectedUser] = useState<MessageUser>("Bruker A");
 
   return (
     <main className="workfinder">
@@ -43,18 +83,20 @@ export default function Workfinder() {
             <section>
               <h2>Dine treff</h2>
               <ul>
-                <li className="match-item">
-                  <strong>Bruker A</strong>, 26
-                  <p>UX-designer</p>
-                </li>
-                <li className="match-item">
-                  <strong>Bruker B</strong>, 31
-                  <p>Frontend-utvikler</p>
-                </li>
-                <li className="match-item">
-                  <strong>Bruker C</strong>, 29
-                  <p>Prosjektleder</p>
-                </li>
+                {(Object.keys(matches) as MatchUser[]).map((user) => (
+                  <li
+                    key={user}
+                    className={`match-item clickable ${
+                      selectedMatch === user ? "active" : ""
+                    }`}
+                    onClick={() => setSelectedMatch(user)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <strong>{user}</strong>, {matches[user].age}
+                    <p>{matches[user].title}</p>
+                  </li>
+                ))}
               </ul>
             </section>
           )}
@@ -63,14 +105,23 @@ export default function Workfinder() {
             <section>
               <h2>Meldinger</h2>
               <ul>
-                <li>
-                  <strong>Bruker A</strong>
-                  <p>Sist aktiv: 2t siden</p>
-                </li>
-                <li>
-                  <strong>Bruker B</strong>
-                  <p>Sist aktiv: 5t siden</p>
-                </li>
+                {(Object.keys(messages) as MessageUser[]).map((user) => (
+                  <li
+                    key={user}
+                    className={`match-item clickable ${
+                      selectedUser === user ? "active" : ""
+                    }`}
+                    onClick={() => setSelectedUser(user)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <strong>{user}</strong>
+                    <p>
+                      Sist aktiv:{" "}
+                      {user === "Bruker A" ? "2t siden" : "5t siden"}
+                    </p>
+                  </li>
+                ))}
               </ul>
             </section>
           )}
@@ -80,9 +131,15 @@ export default function Workfinder() {
           {activeTab === "treff" && (
             <section>
               <header>
-                <h2>Bruker A, 26</h2>
-                <p>UX-designer</p>
+                <h2>
+                  {selectedMatch}, {matches[selectedMatch].age}
+                </h2>
+                <p>{matches[selectedMatch].title}</p>
               </header>
+
+              <p style={{ marginTop: "0.75rem", color: "#4b5563" }}>
+                {matches[selectedMatch].about}
+              </p>
 
               <footer className="actions">
                 <button title="Ikke interessert">❌</button>
@@ -92,22 +149,28 @@ export default function Workfinder() {
           )}
 
           {activeTab === "meldinger" && (
-            <section>
+            <section className="chat">
               <header>
-                <h2>Chat med Bruker A</h2>
+                <h2>Chat med {selectedUser}</h2>
               </header>
 
-              <section>
-                <p>
-                  <strong>Bruker A:</strong> Hei! Hvordan går det?
-                </p>
-                <p>
-                  <strong>Deg:</strong> Hei! Alt bra 😄
-                </p>
-              </section>
+              <div className="chat-messages">
+                {messages[selectedUser].map((msg, i) => (
+                  <div
+                    key={i}
+                    className={`message ${
+                      msg.from === "me" ? "from-me" : "from-them"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                ))}
+              </div>
 
-              <footer>
-                <input type="text" placeholder="Skriv en melding..." />
+              <footer className="chat-input">
+                <div className="input-shell">
+                  <input type="text" placeholder="Send en chat..." />
+                </div>
                 <button>Send</button>
               </footer>
             </section>
