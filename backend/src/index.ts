@@ -171,10 +171,157 @@ export default {
 			}
 		}
 
+		if (path === "/api/swipe" && request.method === "POST") {
+			const body = await request.json() as {
+				swiperId?: number;
+				swiperRole?: string;
+				targetId?: number;
+				targetRole?: string;
+				choice?: number;
+			};
+
+			const { swiperId, swiperRole, targetId, targetRole, choice } = body;
+
+			if (!swiperId || !swiperRole || !targetId || !targetRole || choice === undefined) {
+				return json({ error: "Ugyldig swipe-data" }, 400);
+			}
+
+
+			await env.workfinder_db.prepare(
+				`INSERT OR REPLACE INTO swipes (swiper_id, target_id, swiper_role, target_role, choice)
+				 VALUES (?, ?, ?, ?, ?)`
+			).bind(swiperId, targetId, swiperRole, targetRole, choice).run();
+
+
+			if (choice === 1) {
+				const { results: opposite } = await env.workfinder_db.prepare(
+					`SELECT id FROM swipes 
+					 WHERE swiper_id = ? AND target_id = ? 
+					 AND swiper_role = ? AND target_role = ? AND choice = 1`
+				).bind(targetId, swiperId, targetRole, swiperRole).all();
+
+				if (opposite.length > 0) {
+					const applicantId = swiperRole === "applicant" ? swiperId : targetId;
+					const employerId = swiperRole === "employer" ? swiperId : targetId;
+
+					await env.workfinder_db.prepare(
+						`INSERT OR IGNORE INTO matches (applicant_id, employer_id) VALUES (?, ?)`
+					).bind(applicantId, employerId).run();
+
+					return json({ match: true, applicantId, employerId });
+				}
+			}
+
+			return json({ match: false });
+		}
+
+		if (path === "/api/swipe/next" && request.method === "GET") {
+			const role = url.searchParams.get("role");
+			const id = url.searchParams.get("id");
+
+			if (!role || !id) {
+				return json({ error: "role og id mangler" }, 400);
+			}
+
+			const targetRole = role === "applicant" ? "employer" : "applicant";
+			const table = targetRole === "applicant" ? "applicants" : "employers";
+
+			const { results } = await env.workfinder_db.prepare(
+				`SELECT * FROM ${table}
+				 WHERE id NOT IN (
+					 SELECT target_id FROM swipes WHERE swiper_id = ? AND swiper_role = ?
+				 )
+				 ORDER BY RANDOM()
+				 LIMIT 1`
+			).bind(Number(id), role).all();
+
+			if (results.length === 0) {
+				return json({ done: true });
+			}
+
+			return json(results[0]);
+		}
+
+		if (path === "/api/matches" && request.method === "GET") {
+			const role = url.searchParams.get("role");
+			const id = url.searchParams.get("id");
+
+			if (!role || !id) {
+				return json({ error: "role og id mangler" }, 400);
+			}
+
+			let query = "";
+			if (role === "applicant") {
+				query = `
+					SELECT m.id, m.created_at, e.* 
+					FROM matches m
+					JOIN employers e ON m.employer_id = e.id
+					WHERE m.applicant_id = ?
+				`;
+			} else {
+				query = `
+					SELECT m.id, m.created_at, a.* 
+					FROM matches m
+					JOIN applicants a ON m.applicant_id = a.id
+					WHERE m.employer_id = ?
+				`;
+			}
+
+			const { results } = await env.workfinder_db.prepare(query).bind(Number(id)).all();
+			return json(results);
+		}
+		
+		if (path === "/api/messages" && request.method === "GET") {
+			const matchId = url.searchParams.get("matchId");
+
+			if (!matchId) {
+				return json({ error: "matchId mangler" }, 400);
+			}
+
+			const { results } = await env.workfinder_db.prepare(
+				`SELECT * FROM messages 
+				 WHERE match_id = ? 
+				 ORDER BY created_at ASC`
+			).bind(Number(matchId)).all();
+
+			return json(results);
+		}
+
+		if (path === "/api/messages" && request.method === "POST") {
+			const body = await request.json() as {
+				matchId?: number;
+				senderId?: number;
+				senderRole?: string;
+				message?: string;
+			};
+
+			const { matchId, senderId, senderRole, message } = body;
+
+			if (!matchId || !senderId || !senderRole || !message) {
+				return json({ error: "matchId, senderId, senderRole og message må fylles inn" }, 400);
+			}
+
+			const info = await env.workfinder_db.prepare(
+				`INSERT INTO messages (match_id, sender_id, sender_role, message)
+				 VALUES (?, ?, ?, ?)`
+			).bind(matchId, senderId, senderRole, message).run();
+
+			return json({ 
+				ok: true, 
+				id: info.meta.last_row_id,
+				matchId,
+				senderId,
+				senderRole,
+				message,
+				created_at: new Date().toISOString()
+			}, 201);
+		}
 
       return json({ error: "Ikke funnet." }, 404);
     } catch (errorMessage) {
       return json({ error: String(errorMessage) }, 500);
     }
+
+	
   },
 } satisfies ExportedHandler<Env>;

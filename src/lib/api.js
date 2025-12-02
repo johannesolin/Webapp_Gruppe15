@@ -42,3 +42,56 @@ export async function login(email, password) {
   }
   return res.json();
 }
+
+export async function getNextProfile(role, id) {
+  const res = await fetch(`${BASE}/api/swipe/next?role=${role}&id=${id}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved profil");
+  }
+  return res.json();
+}
+
+export async function sendSwipe(data) {
+  const res = await fetch(`${BASE}/api/swipe`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved swipe");
+  }
+  return res.json();
+}
+
+export async function getMatches(role, id) {
+  const res = await fetch(`${BASE}/api/matches?role=${role}&id=${id}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved matches");
+  }
+  return res.json();
+}
+
+export async function getMessages(matchId) {
+  const res = await fetch(`${BASE}/api/messages?matchId=${matchId}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved henting av meldinger");
+  }
+  return res.json();
+}
+
+export async function sendMessage(data) {
+  const res = await fetch(`${BASE}/api/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved sending av melding");
+  }
+  return res.json();
+}
