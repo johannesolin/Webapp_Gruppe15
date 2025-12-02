@@ -229,7 +229,6 @@ const handleSendMessage = async () => {
         <aside className="profile-menu">
           <div className="profile-header">
             <h2>Profil</h2>
-            {storedUser.role === "applicant" && <p><strong>Navn:</strong> {storedUser.name || "-"}</p>}
             <p><strong>E-post:</strong> {storedUser.email}</p>
             <p><strong>Rolle:</strong> {storedUser.role === "employer" ? "Arbeidsgiver" : "Jobbsøker"}</p>
           </div>
@@ -246,7 +245,7 @@ const handleSendMessage = async () => {
             </label>
 
             <footer className="menu-buttons">
-              <button type="button" className="save">
+              <button type="button" className="save" onClick={() => setShowProfileMenu(false)}>
                 Lagre
               </button>
               <button type="button" className="close" onClick={() => setShowProfileMenu(false)}>
