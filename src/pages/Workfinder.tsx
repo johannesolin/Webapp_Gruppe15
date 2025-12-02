@@ -51,6 +51,8 @@ export default function Workfinder() {
   const [newMessage, setNewMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
 
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
   const storedUser = JSON.parse(user) as User;
   const userId = storedUser.user_id || storedUser.id;
   const userRole = storedUser.role;
@@ -194,11 +196,11 @@ const handleSendMessage = async () => {
   return (
     <main className="workfinder">
       {showMatchPopup && (
-  <aside className="match-popup">
-    <h2>Det er match!</h2>
-    <p>Dere har likt hverandre</p>
-  </aside>
-)}
+        <aside className="match-popup">
+          <h2>Det er match!</h2>
+          <p>Dere har likt hverandre</p>
+        </aside>
+      )}
 
       <header className="topbar">
         <h1 className="logo">
@@ -208,7 +210,7 @@ const handleSendMessage = async () => {
         </h1>
         <nav>
           <span>Innlogget som: {userRole}</span>
-          <button className="profile-btn" onClick={() => nav("/settings")}>
+          <button className="profile-btn" onClick={() => setShowProfileMenu(prev => !prev)}>
             👤 Min profil
           </button>
           <button
@@ -222,6 +224,38 @@ const handleSendMessage = async () => {
           </button>
         </nav>
       </header>
+
+      {showProfileMenu && (
+        <aside className="profile-menu">
+          <div className="profile-header">
+            <h2>Profil</h2>
+            {storedUser.role === "applicant" && <p><strong>Navn:</strong> {storedUser.name || "-"}</p>}
+            <p><strong>E-post:</strong> {storedUser.email}</p>
+            <p><strong>Rolle:</strong> {storedUser.role === "employer" ? "Arbeidsgiver" : "Jobbsøker"}</p>
+          </div>
+          <h2>Endre brukerinfo</h2>
+          <form>
+            <label>
+              E-post
+              <input type="email" defaultValue={storedUser.email} />
+            </label>
+
+            <label>
+              Passord
+              <input type="password" defaultValue="********" />
+            </label>
+
+            <footer className="menu-buttons">
+              <button type="button" className="save">
+                Lagre
+              </button>
+              <button type="button" className="close" onClick={() => setShowProfileMenu(false)}>
+                Lukk
+              </button>
+            </footer>
+          </form>
+        </aside>
+      )}
 
       <section className="main-content">
         <aside className="sidebar">
