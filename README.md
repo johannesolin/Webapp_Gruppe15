@@ -15,7 +15,7 @@ Dette er vårt repo for Webapplikasjoner innleveringer Alpha og Final Beta.
 
 2. Start frontend:
     ```bash
-    npm run dev<br>
+    npm run dev
     ```
     Frontend kjører typisk på: http://localhost:5173
 
