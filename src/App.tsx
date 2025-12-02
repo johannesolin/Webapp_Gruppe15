@@ -6,6 +6,7 @@ import Stilling from "./pages/Stilling";
 import Agiver from "./pages/Agiver";
 import Ataker from "./pages/Ataker";
 import DatabaseTest from "./pages/DatabaseTest";
+import Settings from "./pages/Profil";
 
 function isLoggedIn() {
   const user = localStorage.getItem("workf_bruker");
@@ -41,6 +42,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <DatabaseTest />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
             </ProtectedRoute>
           }
         />

@@ -8,6 +8,7 @@ type Tab = "treff" | "meldinger";
 interface User {
   user_id?: number;
   id?: number;
+  match_id?: number;
   name?: string;
   email?: string;
   age?: number | null;
@@ -152,7 +153,7 @@ export default function Workfinder() {
 const handleSendMessage = async () => {
   if (!newMessage.trim() || !selectedMatch || !userId || !userRole) return;
 
-  const matchId = selectedMatch.id;
+  const matchId = selectedMatch.match_id;
 
   if (!matchId) {
     console.error("Ingen match_id funnet");
@@ -182,13 +183,13 @@ const handleSendMessage = async () => {
 };
 
   const handleMatchClick = (match: User) => {
-  setSelectedMatch(match);
-  setActiveTab("meldinger");
-  
-  if (match.id) {
-    fetchChatMessages(match.id);
-  }
-};
+    setSelectedMatch(match);
+    setActiveTab("meldinger");
+
+    if (match.match_id) {
+      fetchChatMessages(match.match_id);
+    }
+  };
 
   return (
     <main className="workfinder">
@@ -207,7 +208,9 @@ const handleSendMessage = async () => {
         </h1>
         <nav>
           <span>Innlogget som: {userRole}</span>
-          <button className="profile-btn">👤 Min profil</button>
+          <button className="profile-btn" onClick={() => nav("/settings")}>
+            👤 Min profil
+          </button>
           <button
             className="logout"
             onClick={() => {
