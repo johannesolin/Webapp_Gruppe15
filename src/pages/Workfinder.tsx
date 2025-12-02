@@ -32,6 +32,12 @@ interface Message {
 export default function Workfinder() {
   const nav = useNavigate();
 
+  const user = localStorage.getItem("workf_bruker");
+  if (!user) {
+    nav("/login"); 
+    return null;
+  }
+
   const [activeTab, setActiveTab] = useState<Tab>("treff");
   const [currentProfile, setCurrentProfile] = useState<User | null>(null);
   const [matches, setMatches] = useState<User[]>([]);
@@ -44,7 +50,7 @@ export default function Workfinder() {
   const [newMessage, setNewMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
 
-  const storedUser = JSON.parse(localStorage.getItem("workf_bruker") || "{}") as User;
+  const storedUser = JSON.parse(user) as User;
   const userId = storedUser.user_id || storedUser.id;
   const userRole = storedUser.role;
 
@@ -52,11 +58,6 @@ export default function Workfinder() {
   console.log("User ID:", userId, "Role:", userRole);
 
   const fetchNextProfile = async () => {
-    if (!userId || !userRole) {
-      setError("Du må være logget inn for å bruke Workfinder.");
-      return;
-    }
-
     try {
       setLoading(true);
       setError(null);
