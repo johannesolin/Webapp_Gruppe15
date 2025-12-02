@@ -270,6 +270,52 @@ export default {
 			const { results } = await env.workfinder_db.prepare(query).bind(Number(id)).all();
 			return json(results);
 		}
+		
+		if (path === "/api/messages" && request.method === "GET") {
+			const matchId = url.searchParams.get("matchId");
+
+			if (!matchId) {
+				return json({ error: "matchId mangler" }, 400);
+			}
+
+			const { results } = await env.workfinder_db.prepare(
+				`SELECT * FROM messages 
+				 WHERE match_id = ? 
+				 ORDER BY created_at ASC`
+			).bind(Number(matchId)).all();
+
+			return json(results);
+		}
+
+		if (path === "/api/messages" && request.method === "POST") {
+			const body = await request.json() as {
+				matchId?: number;
+				senderId?: number;
+				senderRole?: string;
+				message?: string;
+			};
+
+			const { matchId, senderId, senderRole, message } = body;
+
+			if (!matchId || !senderId || !senderRole || !message) {
+				return json({ error: "matchId, senderId, senderRole og message må fylles inn" }, 400);
+			}
+
+			const info = await env.workfinder_db.prepare(
+				`INSERT INTO messages (match_id, sender_id, sender_role, message)
+				 VALUES (?, ?, ?, ?)`
+			).bind(matchId, senderId, senderRole, message).run();
+
+			return json({ 
+				ok: true, 
+				id: info.meta.last_row_id,
+				matchId,
+				senderId,
+				senderRole,
+				message,
+				created_at: new Date().toISOString()
+			}, 201);
+		}
 
       return json({ error: "Ikke funnet." }, 404);
     } catch (errorMessage) {
