@@ -10,17 +10,17 @@ export default function Login() {
   const nav = useNavigate();
 
   async function confirmLogin(e) {
-  e.preventDefault();
-  setMessage("");
-  try {
-    const data = await login(email, password);
-    localStorage.setItem("workf_bruker", JSON.stringify(data.user));
-    setMessage("Du er logget inn!");
-    nav("/workfinder", { replace: true });
-  } catch (err) {
-    setMessage(err.message || "Feil brukernavn eller passord");
+    e.preventDefault();
+    setMessage("");
+    try {
+      const data = await login(email, password);
+      localStorage.setItem("workf_bruker", JSON.stringify(data.user));
+      setMessage("Du er logget inn!");
+      nav("/workfinder", { replace: true });
+    } catch (err) {
+      setMessage(err.message || "Feil brukernavn eller passord");
+    }
   }
-}
 
   return (
     <main className="login">

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerAgiver } from "../lib/api";
 import "./Agiver.css";
 
 export default function Agiver() {
   const nav = useNavigate();
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [competence, setCompetence] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [description, setDescription] = useState("");
+  const [competence, setCompetence] = useState("");
+  const [location, setLocation] = useState("");
   const [workType, setWorkType] = useState<string[]>([]);
 
   function handleCheckbox(type: string) {
@@ -22,7 +23,7 @@ export default function Agiver() {
     });
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -39,9 +40,13 @@ export default function Agiver() {
       workType,
     };
 
-    console.log("✅ Registrert bedrift:", companyData);
-    alert("Bedriften ble registrert!");
-    nav("/login");
+    try {
+      await registerAgiver(companyData);
+      alert("Bedriften ble registrert!");
+      nav("/login");
+    } catch (errorMessage) {
+      alert(errorMessage.message || "Registrering feilet");
+    }
   }
 
   return (
@@ -61,7 +66,7 @@ export default function Agiver() {
                 type="email"
                 placeholder="Bedriftens e-post"
                 value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e) =>
                   setEmail(e.target.value)
                 }
                 required
@@ -74,7 +79,7 @@ export default function Agiver() {
                 type="password"
                 placeholder="Passord"
                 value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e) =>
                   setPassword(e.target.value)
                 }
                 required
@@ -87,7 +92,7 @@ export default function Agiver() {
                 type="password"
                 placeholder="Gjenta passord"
                 value={confirmPassword}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e) =>
                   setConfirmPassword(e.target.value)
                 }
                 required
@@ -99,7 +104,7 @@ export default function Agiver() {
               <textarea
                 placeholder="Fortell kort om bedriften..."
                 value={description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                onChange={(e) =>
                   setDescription(e.target.value)
                 }
               />
@@ -110,7 +115,7 @@ export default function Agiver() {
               <input
                 placeholder="Kjernekompetanse / fagområder"
                 value={competence}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e) =>
                   setCompetence(e.target.value)
                 }
               />
@@ -121,7 +126,7 @@ export default function Agiver() {
               <input
                 placeholder="Lokasjon (f.eks. Oslo)"
                 value={location}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e) =>
                   setLocation(e.target.value)
                 }
               />
