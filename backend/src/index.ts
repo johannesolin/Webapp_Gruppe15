@@ -62,18 +62,75 @@ export default {
 			}
       	}
 
-		if (path === "/api/auth/login" && request.method === "POST") {
-		const { email, password } = await request.json() as { email?: string; password?: string };
-		if (!email || !password) return json({ error: "email og password må bli fylt på." }, 400);
+		if (path === "/api/employers" && request.method === "POST") {
+			const body = await request.json() as {
+				email?: string;
+				password?: string;
+				description?: string;
+				competence?: string;
+				location?: string;
+				workType?: string[];
+			};
 
-		const { results } = await env.workfinder_db
-			.prepare("SELECT id, email, 'applicant' as role FROM applicants WHERE email = ? AND password = ?")
-			.bind(email, password)
-			.all();
+			const { email, password } = body;
+			if (!email || !password) {
+				return json({ error: "email og password må fylles inn." }, 400);
+			}
 
-		if (results.length) return json({ user: results[0] });
-		return json({ error: "Feil brukernavn og/eller passord." }, 401);
+			const workTypeStr = body.workType && Array.isArray(body.workType)
+				? body.workType.join(",")
+				: null;
+
+			try {
+				const info = await env.workfinder_db
+				.prepare(
+					`INSERT INTO employers (email, password, description, competence, location, workType)
+					VALUES (?, ?, ?, ?, ?, ?)`
+				)
+				.bind(
+					email,
+					password,
+					body.description ?? null,
+					body.competence ?? null,
+					body.location ?? null,
+					workTypeStr
+				)
+				.run();
+
+				return json({ ok: true, id: info.meta.last_row_id, email }, 201);
+
+			} catch (errorMessage: any) {
+				const msg = String(errorMessage);
+				if (msg.includes("UNIQUE") || msg.includes("Constraint")) {
+				return json({ error: "E-post er allerede i bruk." }, 409);
+				}
+				return json({ error: msg }, 500);
+			}
 		}
+
+
+		if (path === "/api/auth/login" && request.method === "POST") {
+			const { email, password } = await request.json() as { email?: string; password?: string };
+			if (!email || !password) return json({ error: "email og password må fylles på." }, 400);
+
+			// Sjekk først applicants
+			let { results } = await env.workfinder_db
+				.prepare("SELECT id, email, 'applicant' as role FROM applicants WHERE email = ? AND password = ?")
+				.bind(email, password)
+				.all();
+
+			if (!results.length) {
+				// Sjekk employers hvis ingen applicants
+				({ results } = await env.workfinder_db
+				.prepare("SELECT id, email, 'employer' as role FROM employers WHERE email = ? AND password = ?")
+				.bind(email, password)
+				.all());
+			}
+
+			if (results.length) return json({ user: results[0] });
+			return json({ error: "Feil brukernavn og/eller passord." }, 401);
+		}
+
 
 		if (path === "/api/database") {
 			if (request.method === "GET") {
@@ -97,12 +154,17 @@ export default {
 
 		if (path === "/api/users" && request.method === "GET") {
 			try {
-				const { results } = await env.workfinder_db.prepare(
-					"SELECT user_id, name, age, workspace, interests FROM ExampleData"
-				)
-				.all();
+				const { results: applicants } = await env.workfinder_db.prepare(
+					"SELECT id AS user_id, name, age, workspace, interests, 'applicant' AS role FROM applicants"
+				).all();
 
-				return json(results);
+				const { results: employers } = await env.workfinder_db.prepare(
+					"SELECT id AS user_id, email AS name, NULL AS age, description AS workspace, competence AS interests, 'employer' AS role FROM employers"
+				).all();
+
+				const allUsers = [...applicants, ...employers];
+
+				return json(allUsers);
 			} catch (err) {
 				console.error(err);
 				return json({ error: "Feil ved henting av brukere" }, 500);

@@ -7,9 +7,11 @@ type Tab = "treff" | "meldinger";
 interface User {
   user_id: number;
   name: string;
-  age: number;
-  workspace: string;
-  interests: string;
+  age?: number;
+  workspace?: string;
+  interests?: string;
+  email?: string;
+  role?: "applicant" | "employer";
 }
 
 const messages = {
@@ -37,6 +39,8 @@ export default function Workfinder() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const user = JSON.parse(localStorage.getItem("workf_bruker") || "{}") as User;
+
   // Hent brukere fra backend
   useEffect(() => {
     const fetchMatches = async () => {
@@ -50,9 +54,18 @@ export default function Workfinder() {
         }
 
         const data: User[] = await res.json();
-        setMatches(data);
 
-        if (data.length > 0) {
+        // Filtrer basert på rollen til innlogget bruker
+        const filtered = data.filter(u => {
+          if (!user.role) return true; // fallback
+          if (user.role === "applicant") return u.role === "employer";
+          if (user.role === "employer") return u.role === "applicant";
+          return false;
+        });
+
+        setMatches(filtered);
+
+        if (filtered.length > 0) {
           setSelectedIndex(0);
         }
       } catch (err) {
@@ -64,7 +77,7 @@ export default function Workfinder() {
     };
 
     fetchMatches();
-  }, []);
+  }, [user.role]);
 
   const selectedMatch = matches[selectedIndex];
 
@@ -77,6 +90,7 @@ export default function Workfinder() {
           </Link>
         </h1>
         <nav>
+          <span>Innlogget som: {user.role}</span>
           <button className="profile-btn">👤 Min profil</button>
           <button className="logout" onClick={() => nav("/login")}>
             Logg ut
@@ -124,7 +138,7 @@ export default function Workfinder() {
                       role="button"
                       tabIndex={0}
                     >
-                      <strong>{user.name}</strong>, {user.age}
+                      <strong>{user.name}</strong>, {user.age && `, ${user.age}`} { /* ekstra sjekk for age siden det er optional nå pga bedrift har ingen age */ }
                       <p>{user.workspace}</p>
                     </li>
                   ))}
@@ -164,7 +178,7 @@ export default function Workfinder() {
             <section>
               <header>
                 <h2>
-                  {selectedMatch.name}, {selectedMatch.age}
+                  {selectedMatch.name}, {selectedMatch.age && `, ${selectedMatch.age}`} { /* ekstra sjekk for age siden det er optional nå pga bedrift har ingen age */ }
                 </h2>
                 <p>{selectedMatch.workspace}</p>
               </header>
