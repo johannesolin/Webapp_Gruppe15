@@ -73,3 +73,25 @@ export async function getMatches(role, id) {
   }
   return res.json();
 }
+
+export async function getMessages(matchId) {
+  const res = await fetch(`${BASE}/api/messages?matchId=${matchId}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved henting av meldinger");
+  }
+  return res.json();
+}
+
+export async function sendMessage(data) {
+  const res = await fetch(`${BASE}/api/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Feil ved sending av melding");
+  }
+  return res.json();
+}

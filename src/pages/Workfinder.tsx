@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { getNextProfile, sendSwipe, getMatches } from "../lib/api";
+import { getNextProfile, sendSwipe, getMatches, getMessages, sendMessage } from "../lib/api";
 import "./Workfinder.css";
 
 type Tab = "treff" | "meldinger";
@@ -20,20 +20,14 @@ interface User {
   role?: "applicant" | "employer";
 }
 
-const messages = {
-  "Bruker A": [
-    { from: "them", text: "Hei! Hvordan går det?" },
-    { from: "me", text: "Hei! Alt bra 😄" },
-    { from: "them", text: "Så bra! Jobber du fortsatt på prosjektet?" },
-  ],
-  "Bruker B": [
-    { from: "them", text: "Hei! Skal vi ta en kaffe snart?" },
-    { from: "me", text: "Gjerne! Når passer det?" },
-    { from: "them", text: "Hva med fredag ettermiddag?" },
-  ],
-} as const;
-
-type MessageUser = keyof typeof messages;
+interface Message {
+  id: number;
+  match_id: number;
+  sender_id: number;
+  sender_role: string;
+  message: string;
+  created_at: string;
+}
 
 export default function Workfinder() {
   const nav = useNavigate();
@@ -41,10 +35,14 @@ export default function Workfinder() {
   const [activeTab, setActiveTab] = useState<Tab>("treff");
   const [currentProfile, setCurrentProfile] = useState<User | null>(null);
   const [matches, setMatches] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<MessageUser>("Bruker A");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [showMatchPopup, setShowMatchPopup] = useState(false);
+
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [selectedMatch, setSelectedMatch] = useState<User | null>(null);
+  const [newMessage, setNewMessage] = useState("");
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   const storedUser = JSON.parse(localStorage.getItem("workf_bruker") || "{}") as User;
   const userId = storedUser.user_id || storedUser.id;
@@ -140,6 +138,57 @@ export default function Workfinder() {
     }
   };
 
+  const fetchChatMessages = async (matchId: number) => {
+  try {
+    const data = await getMessages(matchId);
+    console.log("Chat messages:", data);
+    setChatMessages(data);
+  } catch (err: any) {
+    console.error("Feil ved henting av meldinger:", err);
+  }
+};
+
+const handleSendMessage = async () => {
+  if (!newMessage.trim() || !selectedMatch || !userId || !userRole) return;
+
+  const matchId = selectedMatch.id;
+
+  if (!matchId) {
+    console.error("Ingen match_id funnet");
+    return;
+  }
+
+  try {
+    setSendingMessage(true);
+    
+    const sentMessage = await sendMessage({
+      matchId: matchId,
+      senderId: userId,
+      senderRole: userRole,
+      message: newMessage.trim(),
+    });
+
+    console.log("Message sent:", sentMessage);
+
+    setChatMessages(prev => [...prev, sentMessage]);
+    setNewMessage("");
+  } catch (err: any) {
+    console.error("Feil ved sending av melding:", err);
+    alert("Kunne ikke sende melding");
+  } finally {
+    setSendingMessage(false);
+  }
+};
+
+  const handleMatchClick = (match: User) => {
+  setSelectedMatch(match);
+  setActiveTab("meldinger");
+  
+  if (match.id) {
+    fetchChatMessages(match.id);
+  }
+};
+
   return (
     <main className="workfinder">
       {showMatchPopup && (
@@ -198,7 +247,12 @@ export default function Workfinder() {
                   {matches.map((match, idx) => (
                     <li 
                       key={`${match.user_id || match.id}-${match.role}-${idx}`} 
-                      className="match-item"
+                      className={`match-item clickable ${
+                        selectedMatch?.id === match.id ? "active" : ""
+                      }`}
+                      onClick={() => handleMatchClick(match)}
+                      role="button"
+                      tabIndex={0}
                     >
                       <strong>{match.name || match.email}</strong>
                       {match.age && `, ${match.age}`}
@@ -211,29 +265,21 @@ export default function Workfinder() {
               )}
             </section>
           )}
-
           {activeTab === "meldinger" && (
             <section>
-              <h2>Meldinger</h2>
-              <ul>
-                {(Object.keys(messages) as MessageUser[]).map((msgUser) => (
-                  <li
-                    key={msgUser}
-                    className={`match-item clickable ${
-                      selectedUser === msgUser ? "active" : ""
-                    }`}
-                    onClick={() => setSelectedUser(msgUser)}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <strong>{msgUser}</strong>
-                    <p>
-                      Sist aktiv:{" "}
-                      {msgUser === "Bruker A" ? "2t siden" : "5t siden"}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+              <h2>Dine samtaler</h2>
+              {selectedMatch ? (
+                <article className="selected-chat-info">
+                  <strong>{selectedMatch.name || selectedMatch.email}</strong>
+                  <p style={{ fontSize: "0.85rem", color: "#666" }}>
+                    {selectedMatch.location || "Ukjent lokasjon"}
+                  </p>
+                </article>
+              ) : (
+                <p style={{ fontSize: "0.9rem", color: "#9ca3af", padding: "1rem" }}>
+                  Velg en match for å chatte
+                </p>
+              )}
             </section>
           )}
         </aside>
@@ -285,30 +331,51 @@ export default function Workfinder() {
             </section>
           )}
 
-          {activeTab === "meldinger" && (
+          {activeTab === "meldinger" && selectedMatch && (
             <section className="chat">
               <header>
-                <h2>Chat med {selectedUser}</h2>
+                <h2>Chat med {selectedMatch.name || selectedMatch.email}</h2>
               </header>
 
               <ul className="chat-messages">
-                {messages[selectedUser].map((msg, i) => (
+                {chatMessages.length === 0 && (
+                  <li style={{ textAlign: "center", color: "#9ca3af", listStyle: "none" }}>
+                    Ingen meldinger enda. Send en melding for å starte samtalen.
+                  </li>
+                )}
+                {chatMessages.map((msg) => (
                   <li
-                    key={i}
+                    key={msg.id}
                     className={`message ${
-                      msg.from === "me" ? "from-me" : "from-them"
+                      msg.sender_id === userId ? "from-me" : "from-them"
                     }`}
                   >
-                    {msg.text}
+                    {msg.message}
                   </li>
                 ))}
               </ul>
 
               <footer className="chat-input">
                 <label className="input-shell">
-                  <input type="text" placeholder="Send en chat..." />
+                <input 
+                  type="text" 
+                  placeholder="Send en chat..." 
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter" && !sendingMessage) {
+                      handleSendMessage();
+                    }
+                  }}
+                  disabled={sendingMessage}
+                />
                 </label>
-                <button>Send</button>
+                <button 
+                  onClick={handleSendMessage}
+                  disabled={sendingMessage || !newMessage.trim()}
+                >
+                  {sendingMessage ? "Sender..." : "Send"}
+                </button>
               </footer>
             </section>
           )}
