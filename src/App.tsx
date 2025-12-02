@@ -7,6 +7,15 @@ import Agiver from "./pages/Agiver";
 import Ataker from "./pages/Ataker";
 import DatabaseTest from "./pages/DatabaseTest";
 
+function isLoggedIn() {
+  const user = localStorage.getItem("workf_bruker");
+  return user !== null;
+}
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  return isLoggedIn() ? <>{children}</> : <Navigate to="/login" replace />;
+}
+
 export default function App() {
   console.log("Hei!");
 
@@ -16,11 +25,26 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/stilling" element={<Stilling />} />
-        <Route path="/Agiver" element={<Agiver />} />
-        <Route path="/Ataker" element={<Ataker />} />
-        <Route path="/workfinder" element={<Workfinder />} />
+        <Route path="/agiver" element={<Agiver />} />
         <Route path="/ataker" element={<Ataker />} />
-        <Route path="/database" element={<DatabaseTest />} />
+        
+        <Route
+          path="/workfinder"
+          element={
+            <ProtectedRoute>
+              <Workfinder />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/database"
+          element={
+            <ProtectedRoute>
+              <DatabaseTest />
+            </ProtectedRoute>
+          }
+        />
+        
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>
