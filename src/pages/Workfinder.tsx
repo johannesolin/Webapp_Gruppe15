@@ -207,7 +207,9 @@ const handleSendMessage = async () => {
         </h1>
         <nav>
           <span>Innlogget som: {userRole}</span>
-          <button className="profile-btn">👤 Min profil</button>
+          <button className="profile-btn" onClick={() => nav("/settings")}>
+            👤 Min profil
+          </button>
           <button
             className="logout"
             onClick={() => {
