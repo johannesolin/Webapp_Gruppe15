@@ -138,8 +138,9 @@ export default function Workfinder() {
                       role="button"
                       tabIndex={0}
                     >
-                      <strong>{user.name}</strong>, {user.age && `, ${user.age}`} { /* ekstra sjekk for age siden det er optional nå pga bedrift har ingen age */ }
-                      <p>{user.workspace}</p>
+                      <strong>{user.name}</strong>
+                      {user.age ? `, ${user.age}` : ""} { /* ekstra sjekk for age siden det er optional nå pga bedrift har ingen age */ }
+                      <p>{user.workspace || (user.role === "employer" ? "Bedrift" : "")}</p>
                     </li>
                   ))}
                 </ul>
@@ -178,9 +179,10 @@ export default function Workfinder() {
             <section>
               <header>
                 <h2>
-                  {selectedMatch.name}, {selectedMatch.age && `, ${selectedMatch.age}`} { /* ekstra sjekk for age siden det er optional nå pga bedrift har ingen age */ }
+                  {selectedMatch.name}
+                  {selectedMatch.age ? `, ${selectedMatch.age}` : ""} { /* ekstra sjekk for age siden det er optional nå pga bedrift har ingen age */ }
                 </h2>
-                <p>{selectedMatch.workspace}</p>
+                <p>{selectedMatch.workspace || (selectedMatch.role === "employer" ? "Bedrift" : "Jobbsøker")}</p>
               </header>
 
               <p style={{ marginTop: "0.75rem", color: "#4b5563" }}>

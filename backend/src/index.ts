@@ -155,7 +155,7 @@ export default {
 		if (path === "/api/users" && request.method === "GET") {
 			try {
 				const { results: applicants } = await env.workfinder_db.prepare(
-					"SELECT id AS user_id, name, age, workspace, interests, 'applicant' AS role FROM applicants"
+					"SELECT id AS user_id, name, age, location, skills, 'applicant' AS role FROM applicants"
 				).all();
 
 				const { results: employers } = await env.workfinder_db.prepare(
