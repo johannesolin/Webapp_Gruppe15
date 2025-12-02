@@ -241,35 +241,6 @@ export default {
 
 			return json(results[0]);
 		}
-
-		if (path === "/api/matches" && request.method === "GET") {
-			const role = url.searchParams.get("role");
-			const id = url.searchParams.get("id");
-
-			if (!role || !id) {
-				return json({ error: "role og id mangler" }, 400);
-			}
-
-			let query = "";
-			if (role === "applicant") {
-				query = `
-					SELECT m.id, m.created_at, e.* 
-					FROM matches m
-					JOIN employers e ON m.employer_id = e.id
-					WHERE m.applicant_id = ?
-				`;
-			} else {
-				query = `
-					SELECT m.id, m.created_at, a.* 
-					FROM matches m
-					JOIN applicants a ON m.applicant_id = a.id
-					WHERE m.employer_id = ?
-				`;
-			}
-
-			const { results } = await env.workfinder_db.prepare(query).bind(Number(id)).all();
-			return json(results);
-		}
 		
 		if (path === "/api/messages" && request.method === "GET") {
 			const matchId = url.searchParams.get("matchId");
@@ -288,33 +259,62 @@ export default {
 		}
 
 		if (path === "/api/messages" && request.method === "POST") {
-			const body = await request.json() as {
-				matchId?: number;
-				senderId?: number;
-				senderRole?: string;
-				message?: string;
-			};
+		const body = await request.json() as {
+			matchId?: number;
+			senderId?: number;
+			senderRole?: string;
+			message?: string;
+		};
 
-			const { matchId, senderId, senderRole, message } = body;
+		const { matchId, senderId, senderRole, message } = body;
 
-			if (!matchId || !senderId || !senderRole || !message) {
-				return json({ error: "matchId, senderId, senderRole og message må fylles inn" }, 400);
-			}
+		if (!matchId || !senderId || !senderRole || !message) {
+			return json({ error: "matchId, senderId, senderRole og message må fylles inn" }, 400);
+		}
 
-			const info = await env.workfinder_db.prepare(
-				`INSERT INTO messages (match_id, sender_id, sender_role, message)
-				 VALUES (?, ?, ?, ?)`
-			).bind(matchId, senderId, senderRole, message).run();
+		const info = await env.workfinder_db.prepare(
+			`INSERT INTO messages (match_id, sender_id, sender_role, message)
+			VALUES (?, ?, ?, ?)`
+		).bind(matchId, senderId, senderRole, message).run();
 
-			return json({ 
-				ok: true, 
-				id: info.meta.last_row_id,
-				matchId,
-				senderId,
-				senderRole,
-				message,
-				created_at: new Date().toISOString()
-			}, 201);
+		return json({ 
+			ok: true, 
+			id: info.meta.last_row_id,
+			match_id: matchId,
+			sender_id: senderId,
+			sender_role: senderRole,
+			message: message,
+			created_at: new Date().toISOString()
+		}, 201);
+		}
+
+		if (path === "/api/matches" && request.method === "GET") {
+		const role = url.searchParams.get("role");
+		const id = url.searchParams.get("id");
+
+		if (!role || !id) {
+			return json({ error: "role og id mangler" }, 400);
+		}
+
+		let query = "";
+		if (role === "applicant") {
+			query = `
+			SELECT m.id AS match_id, m.created_at, e.* 
+			FROM matches m
+			JOIN employers e ON m.employer_id = e.id
+			WHERE m.applicant_id = ?
+			`;
+		} else {
+			query = `
+			SELECT m.id AS match_id, m.created_at, a.* 
+			FROM matches m
+			JOIN applicants a ON m.applicant_id = a.id
+			WHERE m.employer_id = ?
+			`;
+		}
+
+		const { results } = await env.workfinder_db.prepare(query).bind(Number(id)).all();
+		return json(results);
 		}
 
       return json({ error: "Ikke funnet." }, 404);
